@@ -1,10 +1,11 @@
 import { Router } from 'express'
-import { loginHandler } from '../controller/user_controller';
+import { loginHandler, signUpHandler } from '../controller/user_controller';
 
 
- const router: Router = Router();
+
+const router: Router = Router();
 
 
-router.route('/').post(loginHandler)
+router.route('/').post(signUpHandler).patch(signUpHandler)
 
 export default router;
