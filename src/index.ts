@@ -5,7 +5,6 @@ import { config } from 'dotenv'
 import { connectDB } from "./utils/connect";
 import cors from "cors";
 import morgan from "morgan";
-import testingMiddleware from './middleware/test_middleware';
 import notFound from './error/not_found';
 import errorHandler from "./helper/error_handler";
 // load dotenv files

@@ -4,19 +4,47 @@ import UserModel from '../model/user_model';
 import { BadRequest } from '../error/bad_request';
 import { encryptPassword } from '../helper/encrypt';
 import { StatusCodes } from 'http-status-codes';
+import jsWebToken from 'jsonwebtoken'
+import { config } from 'dotenv'
+
+// load dotenv files
+config()
 
 
+interface responseObj {
+    [index: string]: number | string
+}
 
 //  login session
-export const loginHandler = (req: Request, res: Response): Response => {
-    return res.json({
-        'body': req.body.name
+export const loginHandler = AsyncWrapper(async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+    if (!email || !password) throw new BadRequest('Email and Password required')
+    const isEmailExist = await UserModel.findOne({ $or: [{ email }] })
+    if (!isEmailExist) throw new BadRequest('Invalid account')
+
+    const resp: responseObj = { id: isEmailExist['id'], email: isEmailExist['email'] }
+
+    // sign in with jsonwebtoken
+
+    const access_token: string = jsWebToken.sign(resp, process.env.ACCESS_JWT_SECRET!, {
+        expiresIn: '30m'
     })
-}
+    const refresh_token: string = jsWebToken.sign(resp, process.env.REFRESH_JWT_SECRET!, {
+        expiresIn: '30 days'
+    })
+
+
+    return res.status(StatusCodes.CREATED).json({
+        msg: 'User login successfully',
+        data: { access_token, refresh_token }
+    })
+})
+
+
 //  create a new account session
 export const signUpHandler: any = AsyncWrapper(async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    if(!email || !password) throw new BadRequest('Email and Password required')
+    if (!email || !password) throw new BadRequest('Email and Password required')
     const isEmailExist = await UserModel.findOne({ $or: [{ email }] })
     if (isEmailExist) throw new BadRequest('Email already exist')
 
@@ -24,7 +52,8 @@ export const signUpHandler: any = AsyncWrapper(async (req: Request, res: Respons
 
     let user = new UserModel({ email, password: encryptedPass });
     await user.save();
-    return res.status(StatusCodes.CREATED).json({
-        msg:'User account created successfully'
+    return res.status(StatusCodes.ACCEPTED).json({
+        msg: 'User account created successfully',
+        data: {}
     })
 });
