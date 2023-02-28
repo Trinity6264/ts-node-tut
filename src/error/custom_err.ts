@@ -1,8 +1,8 @@
-// const { StatusCodes } = require("http-status-codes");
+import { StatusCodes } from "http-status-codes";
 
-class CustomError extends Error {
-    public status: number = 500;
-    constructor(readonly mes: string) {
+ class CustomError extends Error {
+    public status: number = StatusCodes.INTERNAL_SERVER_ERROR;
+    constructor(readonly mes: string = 'Internal server error') {
         super(mes);
         this.message = mes;
     }
