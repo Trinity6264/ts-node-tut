@@ -25,15 +25,12 @@ export const loginHandler = AsyncWrapper(async (req: Request, res: Response) => 
     const resp: responseObj = { id: isEmailExist['id'], email: isEmailExist['email'] }
 
     // sign in with jsonwebtoken
-
     const access_token: string = jsWebToken.sign(resp, process.env.ACCESS_JWT_SECRET!, {
         expiresIn: '30m'
     })
     const refresh_token: string = jsWebToken.sign(resp, process.env.REFRESH_JWT_SECRET!, {
         expiresIn: '30 days'
     })
-
-
     return res.status(StatusCodes.CREATED).json({
         msg: 'User login successfully',
         data: { access_token, refresh_token }
