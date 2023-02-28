@@ -13,7 +13,6 @@ export const geneAccessToken = async (req: Request, res: Response, next: NextFun
     try {
         const { authorization } = req.headers;
         console.log(authorization);
-        console.log('authorization');
         if (!authorization || !authorization.startsWith('Bearer ')) throw new BadRequest('Provide a valid token')
 
         // splitting the string and taking the token out

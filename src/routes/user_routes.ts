@@ -7,6 +7,6 @@ import { geneAccessToken } from '../middleware/refresh_token_check';
 const router: Router = Router();
 
 
-router.route('/').post(geneAccessToken,loginHandler)
+router.route('/signup').post(signUpHandler)
 
 export default router;
