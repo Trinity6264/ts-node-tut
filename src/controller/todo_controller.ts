@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import AsyncWrapper from "../helper/async_wrapper";
 import TodoModel from "../model/todo_model";
 import { StatusCodes } from "http-status-codes";
+import { UserRequest } from "../middleware/refresh_token_check";
 
 
 // create todo
@@ -17,7 +18,7 @@ const createTodo = AsyncWrapper(async (req: Request, res: Response) => {
 })
 // Fetch all todo
 const readAllTodo = AsyncWrapper(async (req: Request, res: Response) => {
-    console.log(req);
+    console.log( '===================+++>' ,res.locals);
     const data = await TodoModel.find({})
     return res.status(StatusCodes.CREATED).json({
         msg: 'Data found',

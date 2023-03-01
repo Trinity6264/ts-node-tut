@@ -4,9 +4,9 @@ import { config } from "dotenv";
 import { JwtPayload, verify } from "jsonwebtoken";
 config()
 
-interface userInterface {
-    readonly email:  string,
-    readonly id: string
+
+export interface UserRequest extends Request {
+    userData: string | JwtPayload
 }
 
 // Checking a new access token if it has expired
@@ -23,8 +23,11 @@ export const geneAccessToken = async (req: Request, res: Response, next: NextFun
         if (!data) throw new BadRequest('Token provided is invalid')
 
         console.log(data);
-        //? req!.user! = data
-        next();
+        
+        res.locals = {
+            data
+        }
+        return next();
 
     } catch (error) {
         console.log(error);
