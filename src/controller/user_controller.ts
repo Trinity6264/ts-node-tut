@@ -12,7 +12,7 @@ import TokenModel from '../model/token_model';
 config()
 
 
-interface responseObj {
+export interface responseObj {
     [index: string]: number | string
 }
 
@@ -23,7 +23,7 @@ export const loginHandler = AsyncWrapper(async (req: Request, res: Response) => 
     const isEmailExist = await UserModel.findOne({ $or: [{ email }] })
     if (!isEmailExist) throw new BadRequest('Invalid account')
 
-    const resp: responseObj = { id: isEmailExist['id'], email: isEmailExist['email'] }
+    const resp: responseObj = { id: isEmailExist['id'] }
 
     // sign in with jsonwebtoken
     const access_token: string = jsWebToken.sign(resp, process.env.ACCESS_JWT_SECRET!, {

@@ -1,6 +1,7 @@
 import express, { Express, Response, Request } from "express";
 import userRouter from './routes/user_routes'
 import todoRouter from './routes/todo_route'
+import tokenRouter from './routes/token_route'
 const app: Express = express();
 import { config } from 'dotenv'
 import { connectDB } from "./utils/connect";
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/todo', todoRouter);
+app.use('/api/v1/token', tokenRouter);
 // incase the route hit was not found then it hit this api end point
 app.use(notFound);
 app.use(errorHandler);

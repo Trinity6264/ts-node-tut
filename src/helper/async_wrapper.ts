@@ -13,6 +13,8 @@ const AsyncWrapper = (fn: (req: UserRequest, res: Response, next: NextFunction) 
         try {
            await fn(req as UserRequest, res, next);
         } catch (error) {
+            console.log(error);
+            
             next(error);
         }
     };
