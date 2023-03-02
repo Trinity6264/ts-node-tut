@@ -33,7 +33,7 @@ const port: string | number = process.env.PORT || 5000;
 const dbUrl: string = process.env.DB_URL!;
 
 app.listen(port, async () => {
-    console.log(`Listening to port ${port}`);
+    console.log(`Listening to port ${port} 😎`);
     await connectDB(dbUrl)
 })
 
