@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import AsyncWrapper from "../helper/async_wrapper";
 import TodoModel from "../model/todo_model";
 import { StatusCodes } from "http-status-codes";
-import { UserRequest } from "../middleware/refresh_token_check";
+import { UserRequest } from "../middleware/auth_check";
 
 
 // create todo

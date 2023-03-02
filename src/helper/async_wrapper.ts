@@ -1,6 +1,6 @@
 
 import { Request, Response, NextFunction } from 'express'
-import { UserRequest } from '../middleware/refresh_token_check';
+import { UserRequest } from '../middleware/auth_check';
 
 
 

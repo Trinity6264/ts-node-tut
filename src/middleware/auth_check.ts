@@ -1,16 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { BadRequest } from "../error/bad_request";
 import { config } from "dotenv";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { StatusCodes } from "http-status-codes";
+import { JwtPayload, verify, JsonWebTokenError } from "jsonwebtoken";
 config()
 
 
 export interface UserRequest extends Request {
-    userData: string | JwtPayload
+    userData: string | JwtPayload,
 }
 
 // Checking a new access token if it has expired
-export const geneAccessToken = async (req: Request, res: Response, next: NextFunction) => {
+export const authCheck = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { authorization } = req.headers;
         if (!authorization || !authorization.startsWith('Bearer ')) throw new BadRequest('Provide a valid token')
@@ -23,14 +24,22 @@ export const geneAccessToken = async (req: Request, res: Response, next: NextFun
         if (!data) throw new BadRequest('Token provided is invalid')
 
         console.log(data);
-        
+
         res.locals = {
             data
         }
-        return next();
+        next();
 
-    } catch (error) {
-        console.log(error);
+    }
+
+    catch (error) {
+        if (error instanceof JsonWebTokenError) {
+            return res.status(StatusCodes.FORBIDDEN).json({
+                status: false,
+                msg: error.message,
+                data: {},
+            });
+        }
         next(error)
     }
 

@@ -6,6 +6,7 @@ import { encryptPassword } from '../helper/encrypt';
 import { StatusCodes } from 'http-status-codes';
 import jsWebToken from 'jsonwebtoken'
 import { config } from 'dotenv'
+import TokenModel from '../model/token_model';
 
 // load dotenv files
 config()
@@ -31,6 +32,7 @@ export const loginHandler = AsyncWrapper(async (req: Request, res: Response) => 
     const refresh_token: string = jsWebToken.sign(resp, process.env.REFRESH_JWT_SECRET!, {
         expiresIn: '30 days'
     })
+    await new TokenModel({ created_by: isEmailExist['id'], token: refresh_token }).save();
     return res.status(StatusCodes.CREATED).json({
         msg: 'User login successfully',
         data: { access_token, refresh_token }
